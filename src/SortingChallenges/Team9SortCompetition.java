@@ -12,10 +12,10 @@ public class Team9SortCompetition
 		
 		long startTime = System.nanoTime(); //record the startTime
 		System.out.println("ChallengeOne Sort Runtime Test:");
-		quickSort(challenge1Test,0,challenge1Test.length);
+		challengeOne(challenge1Test);
 		long endTime = System.nanoTime(); //record stopTime
 		long totalTime = endTime - startTime; //calculate totalTime
-		System.out.println(totalTime/1000000 + "milliseconds");
+		System.out.println(totalTime/1000000 + " milliseconds");
 	}
 	
 	public static double challengeOne(int[] dataSet)
