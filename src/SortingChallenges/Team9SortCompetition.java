@@ -1,9 +1,11 @@
 package SortingChallenges;
+import java.util.Random;
 
 public class Team9SortCompetition 
 {
 	public static void main(String[] args) 
 	{
+		//CHALLENGE ONE
 		int[] challenge1Test = new int[10000];
 		for(int i = 0; i < challenge1Test.length; i++)
 		{
@@ -12,20 +14,81 @@ public class Team9SortCompetition
 		
 		long startTime = System.nanoTime(); //record the startTime
 		System.out.println("ChallengeOne Sort Runtime Test:");
-		challengeOne(challenge1Test);
+		int median = challengeOne(challenge1Test);
 		long endTime = System.nanoTime(); //record stopTime
 		long totalTime = endTime - startTime; //calculate totalTime
 		System.out.println(totalTime/1000000 + " milliseconds");
+		System.out.println(median + "\n");
+		
+		
+		
+		//CHALLENGE TWO
+		String[] challenge2Test = new String[10000];
+		for(int i = 0; i < challenge2Test.length; i++)
+		{
+			String random2 = new String();
+			final String alphabet2 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			final int N1 = alphabet2.length();
+			Random r1 = new Random();
+			random2 = random2 + alphabet2.charAt(r1.nextInt(N1));
+			challenge2Test[i] = random2;
+		}
+		
+		startTime = System.nanoTime(); //record the startTime
+		System.out.println("ChallengeTwo Sort Runtime Test:");
+		int index = challengeTwo(challenge2Test); 
+		endTime = System.nanoTime(); //record stopTime
+		totalTime = endTime - startTime; //calculate totalTime
+		System.out.println(totalTime/1000000 + " milliseconds");
+		System.out.println(index + "\n");
+		
+		//CHALLENGE FOUR
+		int[][] challenge4Test = new int[1000][1000];
+		for(int i = 0; i < challenge4Test.length; i++)
+		{
+			for(int j = 0; j < challenge4Test[i].length; j++)
+			{
+				challenge4Test[i][j] = (int) (Math.random()*10000);
+			}
+		}
+		
+		startTime = System.nanoTime(); //record the startTime
+		System.out.println("ChallengeFour Sort Runtime Test:");
+		double median2 = challengeFour(challenge4Test); 
+		endTime = System.nanoTime(); //record stopTime
+		totalTime = endTime - startTime; //calculate totalTime
+		System.out.println(totalTime/1000000 + " milliseconds");
+		System.out.println(median2);
 	}
 	
-	public static double challengeOne(int[] dataSet)
+	public static int challengeOne(int[] dataSet)
 	{
-		quickSort(dataSet,0,dataSet.length);
-		return ((dataSet[dataSet.length/2])+(dataSet[(dataSet.length/2)-1]))/2;
+		//bubbleSort(dataSet); //200 MS
+		//selectionSort(dataSet); //220 MS
+		//insertionSort(dataSet); //68 MS
+		quickSort(dataSet,0,dataSet.length); //2 MS
+		return median(dataSet);
 	}
 	
 	public static int challengeTwo(String[] dataSet)
 	{
+		String random = new String();
+		final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		final int N = alphabet.length();
+		Random r = new Random();
+		random = random + alphabet.charAt(r.nextInt(N));
+		
+		//bubbleSort(dataSet); //1000 MS
+		//selectionSort(dataSet); //550 MS
+		//insertionSort(dataSet); //500 MS
+		quickSort(dataSet,0,dataSet.length); //17 MS
+		for(int i = 0; i< dataSet.length; i++)
+		{
+			if(random.equals(dataSet[i]))
+			{
+				return i;
+			}
+		}
 		return -1;
 	}
 	
@@ -34,14 +97,144 @@ public class Team9SortCompetition
 		return 1;
 	}
 	
-	public static double challengeFour(int[][] dataSet)
+	public static int challengeFour(int[][] dataSet)
 	{
-		return 1;
+		for(int i = 0; i < dataSet.length; i++)
+		{
+			quickSort(dataSet[i], 0, dataSet[i].length);
+		}
+		
 	}
 	
 	public static int challengeFive()
 	{
 		return -1;
+	}
+	
+	/**
+	 * Bubble sort compares the first pair of elements and swaps them if the element
+	 * that comes first is greater than the second. It continues to compare the next pair 
+	 * of elements and swaps if needed. This method keeps track of how many swaps occurred in
+	 * each iteration until there are no swaps initiated, which then we know the array is sorted
+	 * 
+	 * @param list1 The list to be sorted
+	 */
+	public static void bubbleSort(int[] list1)
+	{
+		int swaps = 0;
+		while(swaps == 0)
+		{
+			for(int i = 0; i < list1.length-1; i++) 
+			{
+				if(list1[i] > list1[i+1])
+				{
+					swap(list1,i,i+1);
+					swaps++;
+				}
+			}
+			if(swaps == 0)
+			{
+				break;
+			}
+			swaps = 0;
+		}
+	}
+	
+	public static void bubbleSort(String[] list1)
+	{
+		int swaps = 0;
+		while(swaps == 0)
+		{
+			for(int i = 0; i < list1.length-1; i++) 
+			{
+				if(list1[i].compareTo(list1[i+1]) > 0)
+				{
+					swap(list1,i,i+1);
+					swaps++;
+				}
+			}
+			if(swaps == 0)
+			{
+				break;
+			}
+			swaps = 0;
+		}
+	}
+	
+	/**
+	 * Selection sort finds the smallest element in the array and moves it
+	 * to the front of the array. Then it searches for the next smallest element
+	 * in the array and puts it after the first element and repeats
+	 * 
+	 * @param list1 The list to be sorted
+	 */
+	public static void selectionSort(int[] list1)
+	{
+		for(int i = 0; i < list1.length; i++)
+		{
+			for(int j = i+1; j < list1.length; j++)
+			{
+				if(list1[i] > list1[j])
+				{
+					swap(list1,i,j);
+				}
+			}
+		}
+	}
+	
+	public static void selectionSort(String[] list1)
+	{
+		for(int i = 0; i < list1.length; i++)
+		{
+			for(int j = i+1; j < list1.length; j++)
+			{
+				if(list1[i].compareTo(list1[j]) > 0)
+				{
+					swap(list1,i,j);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Insertion sort method takes each element from the array and adds it to the 
+	 * front of the array in ascending order. It also keeps track of where the 
+	 * insertion occurs
+	 * 
+	 * @param list1 The list to be sorted
+	 */
+	public static void insertionSort(int[] list1) 
+	{
+		int j = 0;
+		for (int i = 0; i <= list1.length; i++)
+		{
+			for (int k = j-1; k >= 0; k--)
+			{
+				if (list1[k] > list1[j])
+				{
+					swap(list1,k,j);
+					j--;
+				}
+			}
+			j = i;
+		}
+	}
+	
+	public static void insertionSort(String[] list1) 
+	{
+		int j = 0;
+		for (int i = 0; i <= list1.length; i++)
+		{
+			for (int k = j-1; k >= 0; k--)
+			{
+				if (list1[k].compareTo(list1[j]) > 0)
+				{
+					swap(list1,k,j);
+					j--;
+				}
+			}
+			j = i;
+		}
 	}
 	
 	/**
@@ -55,6 +248,20 @@ public class Team9SortCompetition
 	 * @param back The last index of the range of numbers to be sorted
 	 */
 	public static void quickSort(int[] list1, int front, int back)
+	{
+		if (front >= back)
+		{
+			return;
+		}
+		else
+		{
+			int PIVOTindex = partition(list1, front, back);
+			quickSort(list1, front, PIVOTindex);
+			quickSort(list1, PIVOTindex + 1, back);
+		}
+	}
+	
+	public static void quickSort(String[] list1, int front, int back)
 	{
 		if (front >= back)
 		{
@@ -97,6 +304,22 @@ public class Team9SortCompetition
 		return i;
 	}
 	
+	public static int partition(String[] list, int front, int back)
+	{
+		String pivot = list[front];
+		int i = front;
+		for (int j = front + 1; j < back; j++)
+		{
+			if (list[j].compareTo(pivot) <= 0)
+			{
+				i++;
+				swap(list, i, j);
+			}
+		}
+		swap(list, i, front);
+		return i;
+	}
+	
 	/**
 	 * This helper method swaps elements of the integer array at i and j by 
 	 * setting a[i] to a temporary so that the value isn't lost. It then sets 
@@ -111,5 +334,30 @@ public class Team9SortCompetition
 	    int temp = a[i];
 	    a[i] = a[j];
 	    a[j] = temp;
+	}
+	
+	private static void swap(String[] a, int i, int j)
+	{
+	    String temp = a[i];
+	    a[i] = a[j];
+	    a[j] = temp;
+	}
+	
+	/**
+	 * This helper method finds the median of the sorted integer array that is passed
+	 * in by taking the length of the array, dividing it by 2 and taking the integer
+	 * at that index and adding it to the integer at the same index minus 1 and dividing
+	 * the sum by 2 to get the average of both.
+	 * 
+	 * @param list1 the integer array that is passed in
+	 * @return the median of the array
+	 */
+	public static int median(int[] list1)
+	{
+		if(list1.length % 2 == 1)
+		{
+			return (list1[(int)(list1.length/2) + 1]);
+		}
+		return ((list1[list1.length/2])+(list1[(list1.length/2)-1]))/2;
 	}
 }
