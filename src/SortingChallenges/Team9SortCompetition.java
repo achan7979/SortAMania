@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Team9SortCompetition 
 {
-	public static void main(String[] args) 
+	public static void main(String[] args) implements Comparable
 	{
 		//CHALLENGE ONE
 		int[] challenge1Test = new int[10000];
@@ -99,11 +99,20 @@ public class Team9SortCompetition
 	
 	public static int challengeFour(int[][] dataSet)
 	{
+		int[] medians = new int[dataSet.length];
 		for(int i = 0; i < dataSet.length; i++)
 		{
-			quickSort(dataSet[i], 0, dataSet[i].length);
+			//insertionSort(dataSet[i]); // 650 MS
+			//selectionSort(dataSet[i]); // 1300 MS
+			//bubbleSort(dataSet[i]); // 1275 MS
+			quickSort(dataSet[i], 0, dataSet[i].length); //66 MS
+			medians[i] = median(dataSet[i]);
 		}
-		
+		//insertionSort(medians); // 650 MS
+		//selectionSort(medians); // 1300 MS
+		//bubbleSort(medians); // 1275 MS
+		quickSort(medians,0,medians.length); //66 MS
+		return median(medians);
 	}
 	
 	public static int challengeFive()
