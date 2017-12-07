@@ -82,7 +82,7 @@ public class Team9SortCompetition
 		//bubbleSort(dataSet); //1000 MS
 		//selectionSort(dataSet); //550 MS
 		//insertionSort(dataSet); //500 MS
-		quickSort(dataSet,0,dataSet.length); //17 MS
+		quickSort(dataSet,0,dataSet.length, item); //17 MS
 		for(int i = 0; i< dataSet.length; i++)
 		{
 			if(item.equals(dataSet[i]))
@@ -273,7 +273,7 @@ public class Team9SortCompetition
 		}
 	}
 	
-	public static void quickSort(String[] list1, int front, int back)
+	public static void quickSort(String[] list1, int front, int back, String item)
 	{
 		if (front >= back)
 		{
@@ -281,9 +281,10 @@ public class Team9SortCompetition
 		}
 		else
 		{
-			int PIVOTindex = partition(list1, front, back);
-			quickSort(list1, front, PIVOTindex);
-			quickSort(list1, PIVOTindex + 1, back);
+			int[] answers2 = partition(list1, front, back, item);
+			int PIVOTindex = answers2[0];
+			quickSort(list1, front, PIVOTindex, item);
+			quickSort(list1, PIVOTindex + 1, back, item);
 		}
 	}
 	
@@ -316,20 +317,29 @@ public class Team9SortCompetition
 		return i;
 	}
 	
-	public static int partition(String[] list, int front, int back)
+	public static int[] partition(String[] list, int front, int back, String item)
 	{
+		int[] answers = new int[2];
 		String pivot = list[front];
+		int index = -1;
 		int i = front;
 		for (int j = front + 1; j < back; j++)
 		{
 			if (list[j].compareTo(pivot) <= 0)
 			{
+				if(list[j].compareTo(pivot) == 0)
+				{
+					index = i;
+				}
 				i++;
 				swap(list, i, j);
 			}
+			
 		}
 		swap(list, i, front);
-		return i;
+		answers[0] = i;
+		answers[1] = index;
+		return answers;
 	}
 	
 	/**
