@@ -24,6 +24,7 @@ public class Team9SortCompetition
 		
 		//CHALLENGE TWO
 		String[] challenge2Test = new String[10000];
+		String random = new String();
 		String random2 = new String();
 		final String alphabet2 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		final int N1 = alphabet2.length();
@@ -32,6 +33,7 @@ public class Team9SortCompetition
 		{
 			for(int j = 0; j < 5; j++)
 			{
+				random = random + alphabet2.charAt(r1.nextInt(N1));
 				random2 = random2 + alphabet2.charAt(r1.nextInt(N1));
 			}
 			challenge2Test[i] = random2;
@@ -39,8 +41,7 @@ public class Team9SortCompetition
 		
 		startTime = System.nanoTime(); //record the startTime
 		System.out.println("ChallengeTwo Sort Runtime Test:");
-		System.out.println(random2);
-		int index = challengeTwo(challenge2Test); 
+		int index = challengeTwo(challenge2Test, random); 
 		endTime = System.nanoTime(); //record stopTime
 		totalTime = endTime - startTime; //calculate totalTime
 		System.out.println(totalTime/1000000 + " milliseconds");
@@ -76,24 +77,15 @@ public class Team9SortCompetition
 		return median(dataSet);
 	}
 	
-	public static int challengeTwo(String[] dataSet)
+	public static int challengeTwo(String[] dataSet, String item)
 	{
-		String random = new String();
-		final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		final int N = alphabet.length();
-		Random r = new Random();
-		for(int i = 0; i < 5; i++)
-		{
-			random = random + alphabet.charAt(r.nextInt(N));
-		}
 		//bubbleSort(dataSet); //1000 MS
 		//selectionSort(dataSet); //550 MS
 		//insertionSort(dataSet); //500 MS
 		quickSort(dataSet,0,dataSet.length); //17 MS
-		System.out.println(random);
 		for(int i = 0; i< dataSet.length; i++)
 		{
-			if(random.equals(dataSet[i]))
+			if(item.equals(dataSet[i]))
 			{
 				return i;
 			}
