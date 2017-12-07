@@ -3,13 +3,13 @@ import java.util.Random;
 
 public class Team9SortCompetition 
 {
-	public static void main(String[] args) implements Comparable
+	public static void main(String[] args)
 	{
 		//CHALLENGE ONE
 		int[] challenge1Test = new int[10000];
 		for(int i = 0; i < challenge1Test.length; i++)
 		{
-			challenge1Test[i] = (int) (Math.random()*10000);
+			challenge1Test[i] = (int) (Math.random()*10001);
 		}
 		
 		long startTime = System.nanoTime(); //record the startTime
@@ -24,18 +24,22 @@ public class Team9SortCompetition
 		
 		//CHALLENGE TWO
 		String[] challenge2Test = new String[10000];
+		String random2 = new String();
+		final String alphabet2 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		final int N1 = alphabet2.length();
+		Random r1 = new Random();
 		for(int i = 0; i < challenge2Test.length; i++)
 		{
-			String random2 = new String();
-			final String alphabet2 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			final int N1 = alphabet2.length();
-			Random r1 = new Random();
-			random2 = random2 + alphabet2.charAt(r1.nextInt(N1));
+			for(int j = 0; j < 5; j++)
+			{
+				random2 = random2 + alphabet2.charAt(r1.nextInt(N1));
+			}
 			challenge2Test[i] = random2;
 		}
 		
 		startTime = System.nanoTime(); //record the startTime
 		System.out.println("ChallengeTwo Sort Runtime Test:");
+		System.out.println(random2);
 		int index = challengeTwo(challenge2Test); 
 		endTime = System.nanoTime(); //record stopTime
 		totalTime = endTime - startTime; //calculate totalTime
@@ -43,15 +47,16 @@ public class Team9SortCompetition
 		System.out.println(index + "\n");
 		
 		//CHALLENGE FOUR
-		int[][] challenge4Test = new int[1000][1000];
+		int[][] challenge4Test = new int[10000][10000];
 		for(int i = 0; i < challenge4Test.length; i++)
 		{
 			for(int j = 0; j < challenge4Test[i].length; j++)
 			{
-				challenge4Test[i][j] = (int) (Math.random()*10000);
+				challenge4Test[i][j] = (int) (Math.random()*10001);
 			}
 		}
 		
+		/*
 		startTime = System.nanoTime(); //record the startTime
 		System.out.println("ChallengeFour Sort Runtime Test:");
 		double median2 = challengeFour(challenge4Test); 
@@ -59,6 +64,7 @@ public class Team9SortCompetition
 		totalTime = endTime - startTime; //calculate totalTime
 		System.out.println(totalTime/1000000 + " milliseconds");
 		System.out.println(median2);
+		*/
 	}
 	
 	public static int challengeOne(int[] dataSet)
@@ -76,12 +82,15 @@ public class Team9SortCompetition
 		final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		final int N = alphabet.length();
 		Random r = new Random();
-		random = random + alphabet.charAt(r.nextInt(N));
-		
+		for(int i = 0; i < 5; i++)
+		{
+			random = random + alphabet.charAt(r.nextInt(N));
+		}
 		//bubbleSort(dataSet); //1000 MS
 		//selectionSort(dataSet); //550 MS
 		//insertionSort(dataSet); //500 MS
 		quickSort(dataSet,0,dataSet.length); //17 MS
+		System.out.println(random);
 		for(int i = 0; i< dataSet.length; i++)
 		{
 			if(random.equals(dataSet[i]))
@@ -105,13 +114,15 @@ public class Team9SortCompetition
 			//insertionSort(dataSet[i]); // 650 MS
 			//selectionSort(dataSet[i]); // 1300 MS
 			//bubbleSort(dataSet[i]); // 1275 MS
-			quickSort(dataSet[i], 0, dataSet[i].length); //66 MS
+			//quickSort(dataSet[i], 0, dataSet[i].length); //66 MS
+			countingSort(dataSet[i],0,dataSet[i].length);
 			medians[i] = median(dataSet[i]);
 		}
 		//insertionSort(medians); // 650 MS
 		//selectionSort(medians); // 1300 MS
 		//bubbleSort(medians); // 1275 MS
-		quickSort(medians,0,medians.length); //66 MS
+		//quickSort(medians,0,medians.length); //66 MS
+		countingSort(medians,0,medians.length);
 		return median(medians);
 	}
 	
@@ -368,5 +379,36 @@ public class Team9SortCompetition
 			return (list1[(int)(list1.length/2) + 1]);
 		}
 		return ((list1[list1.length/2])+(list1[(list1.length/2)-1]))/2;
+	}
+
+	/**
+	 * 
+	 * @param list1
+	 * @param rangeL
+	 * @param rangeH
+	 * @return
+	 */
+	public static int[] countingSort(int[] list1, int rangeL, int rangeH)	
+	{
+		int[] count = new int[rangeH - rangeL + 1];
+		for (int i = 0; i < list1.length; i++)
+		{
+			count[list1[i] - rangeL]++;
+			//System.out.println(list1[i]);
+		}
+		//int tempSum = 0;
+		for (int i = 1; i < count.length; i++)
+		{
+			count[i] = count[i] + count[i-1];
+			//tempSum = count[i];count[i]
+			//System.out.println(list1[i]);
+		}
+		int[] sorted = new int[rangeH - rangeL + 1];
+		for (int i = 0; i < list1.length; i++)
+		{
+			sorted[count[list1[i]]] = list1[i];
+			count[list1[i]]--;
+		}
+		return sorted;
 	}
 }
