@@ -9,7 +9,7 @@ public class Team9SortCompetition
 		int[] challenge1Test = new int[10000];
 		for(int i = 0; i < challenge1Test.length; i++)
 		{
-			challenge1Test[i] = (int) (Math.random()*10001);
+			challenge1Test[i] = (int) (Math.random()*10000);
 		}
 		
 		long startTime = System.nanoTime(); //record the startTime
@@ -23,6 +23,7 @@ public class Team9SortCompetition
 		
 		
 		//CHALLENGE TWO
+		/*
 		String[] challenge2Test = new String[10000];
 		String random = new String();
 		String random2 = new String();
@@ -33,10 +34,13 @@ public class Team9SortCompetition
 		{
 			for(int j = 0; j < 5; j++)
 			{
-				random = random + alphabet2.charAt(r1.nextInt(N1));
 				random2 = random2 + alphabet2.charAt(r1.nextInt(N1));
 			}
 			challenge2Test[i] = random2;
+		}
+		for(int x = 0; x < 5; x++)
+		{
+			random = random + alphabet2.charAt(r1.nextInt(N1));
 		}
 		
 		startTime = System.nanoTime(); //record the startTime
@@ -46,18 +50,19 @@ public class Team9SortCompetition
 		totalTime = endTime - startTime; //calculate totalTime
 		System.out.println(totalTime/1000000 + " milliseconds");
 		System.out.println(index + "\n");
+		*/
 		
 		//CHALLENGE FOUR
-		int[][] challenge4Test = new int[10000][10000];
+		int[][] challenge4Test = new int[1000][1000];
 		for(int i = 0; i < challenge4Test.length; i++)
 		{
 			for(int j = 0; j < challenge4Test[i].length; j++)
 			{
-				challenge4Test[i][j] = (int) (Math.random()*10001);
+				challenge4Test[i][j] = (int) (Math.random()*10000);
 			}
 		}
 		
-		/*
+		
 		startTime = System.nanoTime(); //record the startTime
 		System.out.println("ChallengeFour Sort Runtime Test:");
 		double median2 = challengeFour(challenge4Test); 
@@ -65,15 +70,11 @@ public class Team9SortCompetition
 		totalTime = endTime - startTime; //calculate totalTime
 		System.out.println(totalTime/1000000 + " milliseconds");
 		System.out.println(median2);
-		*/
 	}
 	
 	public static int challengeOne(int[] dataSet)
 	{
-		//bubbleSort(dataSet); //200 MS
-		//selectionSort(dataSet); //220 MS
-		//insertionSort(dataSet); //68 MS
-		quickSort(dataSet,0,dataSet.length); //2 MS
+		countingSort(dataSet,0,dataSet.length); //1 MS
 		return median(dataSet);
 	}
 	
@@ -82,7 +83,7 @@ public class Team9SortCompetition
 		//bubbleSort(dataSet); //1000 MS
 		//selectionSort(dataSet); //550 MS
 		//insertionSort(dataSet); //500 MS
-		quickSort(dataSet,0,dataSet.length, item); //17 MS
+		quickSort(dataSet,0,dataSet.length);
 		for(int i = 0; i< dataSet.length; i++)
 		{
 			if(item.equals(dataSet[i]))
@@ -95,7 +96,8 @@ public class Team9SortCompetition
 	
 	public static double challengeThree(int[] dataSet)
 	{
-		return 1;
+		countingSort(dataSet,0,dataSet.length);
+		return median(dataSet);
 	}
 	
 	public static int challengeFour(int[][] dataSet)
@@ -120,7 +122,7 @@ public class Team9SortCompetition
 	
 	public static int challengeFive()
 	{
-		return -1;
+		return 0;
 	}
 	
 	/**
@@ -273,7 +275,7 @@ public class Team9SortCompetition
 		}
 	}
 	
-	public static void quickSort(String[] list1, int front, int back, String item)
+	public static void quickSort(String[] list1, int front, int back)
 	{
 		if (front >= back)
 		{
@@ -281,10 +283,23 @@ public class Team9SortCompetition
 		}
 		else
 		{
-			int[] answers2 = partition(list1, front, back, item);
-			int PIVOTindex = answers2[0];
-			quickSort(list1, front, PIVOTindex, item);
-			quickSort(list1, PIVOTindex + 1, back, item);
+			int PIVOTindex = partition(list1, front, back);
+			quickSort(list1, front, PIVOTindex);
+			quickSort(list1, PIVOTindex + 1, back);
+		}
+	}
+	
+	public static void quickSort(Comparable[] objects, int front, int back)
+	{
+		if (front >= back)
+		{
+			return;
+		}
+		else
+		{
+			int PIVOTindex = partition(objects, front, back);
+			quickSort(objects, front, PIVOTindex);
+			quickSort(objects, PIVOTindex + 1, back);
 		}
 	}
 	
@@ -317,29 +332,38 @@ public class Team9SortCompetition
 		return i;
 	}
 	
-	public static int[] partition(String[] list, int front, int back, String item)
+	public static int partition(String[] list, int front, int back)
 	{
-		int[] answers = new int[2];
 		String pivot = list[front];
-		int index = -1;
 		int i = front;
 		for (int j = front + 1; j < back; j++)
 		{
 			if (list[j].compareTo(pivot) <= 0)
 			{
-				if(list[j].compareTo(pivot) == 0)
-				{
-					index = i;
-				}
 				i++;
 				swap(list, i, j);
 			}
 			
 		}
 		swap(list, i, front);
-		answers[0] = i;
-		answers[1] = index;
-		return answers;
+		return i;
+	}
+	
+	public static int partition(Comparable[] objects, int front, int back)
+	{
+		Comparable pivot = objects[front];
+		int i = front;
+		for (int j = front + 1; j < back; j++)
+		{
+			if (objects[j].compareTo(pivot) <= 0)
+			{
+				i++;
+				swap(objects, i, j);
+			}
+			
+		}
+		swap(objects, i, front);
+		return i;
 	}
 	
 	/**
@@ -361,6 +385,13 @@ public class Team9SortCompetition
 	private static void swap(String[] a, int i, int j)
 	{
 	    String temp = a[i];
+	    a[i] = a[j];
+	    a[j] = temp;
+	}
+	
+	private static void swap(Comparable[] a, int i, int j)
+	{
+	    Comparable temp = a[i];
 	    a[i] = a[j];
 	    a[j] = temp;
 	}
